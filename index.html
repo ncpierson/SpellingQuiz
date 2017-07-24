@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+
+  body{
+    background-image: url("room.jpg");
+  }
+
+  #container{
+  }
+
+  #header{
+    color: blue;
+    text-align: center;
+    font-family: serif;
+    padding-bottom: 20px;
+  }
+
+  #print{
+    padding-bottom: 100px;
+  }
+
+  #playSound{
+    padding-bottom: 40px;
+    text-align: center;
+  }
+
+  #textbox{
+    display: block;
+    margin : 0 auto;
+    text-align: center;
+    padding-bottom: 50px;
+  }
+
+  #word{
+    text-align: center;
+    padding-bottom: 50px;
+  }
+
+  #spelling{
+    font-size: 18px;
+  }
+
+  #score{
+    color: green;
+    font-size: 40px;
+    text-align: center;
+  }
+
+  #clue{
+    padding-bottom: 40px;
+    text-align: center;
+    font-size: 22px;
+    color: red;
+  }
+
+  #endResult{
+    font-family: sans-serif;
+    font-size: 18px;
+    color: red;
+    font-weight: bold;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  }
+
+  #imageIcon{
+    padding-bottom: 40px;
+  }
+
+  </style>
+</head>
+<body onload="PlaySound()">
+
+  <div id="container">
+
+    <div id="header">
+      <h1>Spelling Challenge</h1>
+    </div>
+
+    <div id="playSound">
+      <button id="button" onclick="PlaySound()"></button>
+    </div>
+
+    <div id="score">
+      <h2></h2>
+    </div>
+
+    <div id="clue">
+      <h2></h2>
+    </div>
+
+    <div id="imageIcon">
+      <img src="" alt="">
+    </div>
+
+    <div id="textbox">
+      <input style="width:250px; height:25px;" type="text" id="spelling" onkeypress="return go(event)" autofocus><br>
+    </div>
+
+
+  </div>
+
+  <p id="endResult"></p>
+  <p id="perfectScore"></p>
+
+  <script>
+
+  function go(e) {
+    if (e.keyCode == 13) {
+        validate();
+        event.currentTarget.value = "";
+    }
+}
+
+  var speakerButton = document.getElementById("button");
+  speakerButton.innerHTML = '<img src="./speaker.gif" />';
+
+
+  function shuffle(a) {
+    var j, x, i;
+    for (i = a.length; i; i--) {
+        j = Math.floor(Math.random() * i);
+        x = a[i - 1];
+        a[i - 1] = a[j];
+        a[j] = x;
+    }
+   }
+
+
+   list = ["necessary", "accommodation", "business" , "stationery", "assistant", "embarrassed", "definitely", "school", "address", "beginning", "writing", "because", "having","tomorrow", "truck", "college", "argument", "remember","finally","reason"];
+   shuffle(list);
+
+
+  function PlaySound(sound) {
+    var path = "https://ssl.gstatic.com/dictionary/static/sounds/de/0/"
+    var snd = new Audio(path + list[right-1] +".mp3");
+    snd.play();
+
+    }
+
+
+  var right = 1;
+  var count = 0;
+  var wrongWords = [];
+  var point = 0;
+  var result = wrongWords.filter(function (value, index, array){ return array.indexOf(value) == index; });
+
+
+  function validate(){
+    var flag = false;
+    usersAnswer = document.getElementById("spelling").value;
+    for (var i = 0; i < right; i++) {
+      var object = list[right-1];
+      if (usersAnswer === list[right-1]) {
+        flag = true;
+        var correct = new Audio("./ding.mp3");
+        correct.play();
+        right= right + 1
+        var rightAnswer = document.getElementById("clue");
+        rightAnswer.innerHTML = '';
+        if (count<1) {
+          point = point + 1
+        }
+        var icon = document.getElementById("imageIcon");
+        icon.innerHTML = "<img src=\"./tick.png\" width=\"45px\" height=\"45px\">";
+        icon.style.display = "block";
+        icon.setAttribute('style','text-align:center;');
+        count = 0;
+        if (usersAnswer === list[list.length-1] ) {
+          var result = wrongWords.filter(function (value, index, array){ return array.indexOf(value) == index; });
+          document.getElementById("endResult").innerHTML += "Wrong words : "+result
+          if (result == "") {
+            document.getElementById("perfectScore").innerHTML += "<p>Congratulations! You made no errors</p>"
+            var elem = document.getElementById("perfectScore");
+            elem.style.color = "#32cd32";
+            elem.style.fontFamily = "sans-serif";
+            elem.style.fontSize= "35px";
+            elem.style.fontWeight = "bold";
+            elem.style.textShadow = "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black";
+          }
+        }else {
+          PlaySound();
+        }
+      }
+    }
+    if (flag == false) {
+      var snd = new Audio("./oops.mp3");
+      snd.play();
+      count = count +1
+      var icon = document.getElementById("imageIcon");
+      icon.innerHTML = "<img src=\"./cross.png\" width=\"45px\" height=\"45px\">";
+      icon.style.display = "block";
+      icon.setAttribute('style','text-align:center;');
+      if (count>=1) {
+        wrongWords.push(object);
+      }
+      if (count>=3) {
+        var rightAnswer = document.getElementById("clue");
+        rightAnswer.innerHTML = object;
+      }
+    }
+    scoreCalc();
+  }
+
+
+  function scoreCalc(){
+    var score = point;
+    var finalPoints = document.getElementById("score");
+    finalPoints.innerHTML = score + "/" + list.length;
+  }
+
+  function play(){
+     var audio = document.getElementById("audio");
+     audio.play();
+               }
+
+  </script>
+</body>
+</html>
