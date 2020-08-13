@@ -1,0 +1,12 @@
+{
+  "name": "SpellingQuiz",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:ncpierson/SpellingQuiz.git",
+  "author": "Nick Pierson <me@nick.exposed>",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "prettier": "^2.0.5"
+  }
+}
